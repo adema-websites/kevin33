@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="es">
+<head>
+<title>KEVIN v33.0</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Kevin se metió en tu celular para invitarte a su cumple 33: sábado 7/11, Av. Luro 4923, Laferrere, de 22 a 3.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=VT323&display=swap">
+<style>
+/* Layout: una ventana de terminal a lo ancho del celu: cara arriba, mensaje en criollo, tarjeta con los datos, botones grandes. Solo look oscuro, a propósito. */
+:root {
+  --bg: #070a08;
+  --panel: #0b110d;
+  --fg: #7dfc9c;
+  --dim: #4a8f60;
+  --ketchup: #ff4a3d;
+  --mostaza: #ffcc1a;
+  --ink: #f2fff4;
+  --display: "VT323", "Courier New", monospace;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, "Courier New", monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { background: var(--bg); }
+body {
+  margin: 0; color: var(--ink);
+  font: 16px/1.6 var(--mono);
+  padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-tap-highlight-color: transparent;
+}
+body::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 5;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.18) 2px 3px);
+}
+.win { max-width: 30rem; margin: 0 auto; border: 1px solid var(--dim); background: var(--panel); box-shadow: 0 0 40px rgba(125,252,156,.08); }
+.bar { display: flex; justify-content: space-between; gap: 8px; background: var(--fg); color: var(--bg); font: 20px/1 var(--display); padding: 5px 10px; }
+.bar span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.screen { padding: 20px 16px 22px; display: grid; gap: 20px; }
+
+.warn { margin: 0; text-align: center; color: var(--ketchup); font: 22px/1.1 var(--display); letter-spacing: .06em; animation: blink 1.1s steps(1) infinite; }
+
+.avatar { justify-self: center; width: 190px; max-width: 60%; border: 2px solid var(--fg); padding: 4px; background: var(--bg); box-shadow: 0 0 24px rgba(125,252,156,.2); }
+.avatar img { display: block; width: 100%; height: auto; image-rendering: pixelated; animation: scan 1.4s steps(20) both; }
+@keyframes scan { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+.msg { display: grid; gap: 12px; }
+.msg p { margin: 0; text-wrap: pretty; }
+.msg .hola { font: 40px/1 var(--display); color: var(--fg); letter-spacing: .02em; }
+.msg strong { color: var(--mostaza); font-weight: 600; }
+.cursor { display: inline-block; width: .55em; height: 1em; background: var(--fg); vertical-align: -0.12em; margin-left: 2px; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+.card { border: 3px double var(--mostaza); padding: 16px 14px; display: grid; gap: 14px; }
+.row { display: grid; gap: 2px; }
+.row .k { color: var(--mostaza); font: 20px/1 var(--display); letter-spacing: .08em; }
+.row .v { font-size: 18px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+.row .s { font-size: 14px; color: var(--dim); }
+
+.keys { display: grid; gap: 10px; }
+.key {
+  display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+  text-decoration: none; cursor: pointer; text-align: center;
+  font: 600 17px/1.2 var(--mono); padding: 15px 14px;
+  border: 2px solid var(--fg); color: var(--fg); background: transparent;
+}
+.key.primary { background: var(--fg); color: var(--bg); }
+.key.ghost { border-color: var(--dim); color: var(--dim); font-weight: 400; font-size: 15px; padding: 11px 14px; }
+.key:focus-visible { outline: 3px solid var(--mostaza); outline-offset: 3px; }
+.key:active { transform: translateY(2px); }
+.reply { margin: 0; min-height: 1.5em; text-align: center; color: var(--ketchup); font-size: 15px; }
+
+.foot { margin: 0; text-align: center; color: var(--dim); font-size: 13px; }
+
+.skip { position: fixed; right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 6;
+  font: 18px/1 var(--display); color: var(--dim); background: var(--bg); border: 1px solid var(--dim); padding: 7px 10px; cursor: pointer; }
+.wait { display: none !important; }
+.in { animation: pop .3s steps(3) both; }
+@keyframes pop { from { opacity: 0; transform: translateY(6px); } }
+@media (prefers-reduced-motion: reduce) { .in, .avatar img, .cursor, .warn { animation: none; } }
+</style>
+
+</head>
+<body>
+<main class="win" aria-label="Invitación al cumpleaños 33 de Kevin">
+  <div class="bar" aria-hidden="true"><span>C:\KEVIN\CUMPLE33.EXE</span><span>[_][□][×]</span></div>
+  <div class="screen">
+    <p class="warn">⚠ CONEXIÓN ENTRANTE ⚠</p>
+
+    <div class="avatar"><img src="data:image/png;base64,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" width="48" height="60" alt="Foto de Kevin en pixel art"></div>
+
+    <div class="msg" id="msg">
+      <p class="hola">Hola, soy Kevin.</p>
+      <p>Me metí en tu celular. Tranqui, no voy a tocar nada.</p>
+      <p>Solo entré para invitarte a festejar <strong>mi cumple 33</strong>.</p>
+      <p>Habrá panchos con salsas para armar a gusto. ¿Te sumás?</p>
+    </div>
+
+    <section class="card step" aria-label="Datos del cumple">
+      <div class="row"><span class="k">CUÁNDO</span><span class="v">Sábado 7 de noviembre</span></div>
+      <div class="row"><span class="k">HORARIO</span><span class="v">De 22 a 3 am, aprox.</span></div>
+      <div class="row"><span class="k">DÓNDE</span><span class="v">Av. Luro 4923</span><span class="s">Gregorio de Laferrere</span></div>
+      <div class="row"><span class="k">COMIDA</span><span class="v">Panchos con salsas</span><span class="s">Mostaza, ketchup, mayo, golf y más.</span></div>
+      <div class="row"><span class="k">TRAÉ</span><span class="v">Una bebida para compartir</span><span class="s">Si querés. Con hielo, mejor.</span></div>
+    </section>
+
+    <div class="keys step">
+      <a class="key primary" href="https://www.google.com/maps/search/?api=1&amp;query=Av.%20Luro%204923%2C%20Gregorio%20de%20Laferrere%2C%20Buenos%20Aires" target="_blank" rel="noopener">▶ CÓMO LLEGAR (MAPA)</a>
+      <a class="key" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Cumple%2033%20de%20Kevin%20%C2%B7%20Panchos&amp;dates=20261108T010000Z%2F20261108T060000Z&amp;location=Av.%20Luro%204923%2C%20Gregorio%20de%20Laferrere%2C%20Buenos%20Aires&amp;details=Panchos%20con%20salsas.%20Tra%C3%A9%20una%20bebida%20para%20compartir%20si%20quer%C3%A9s." target="_blank" rel="noopener">+ AGENDAR EN EL CALENDARIO</a>
+      <button class="key ghost" id="nopuedo" type="button">No puedo ir</button>
+      <p class="reply" id="reply" aria-live="polite"></p>
+    </div>
+
+    <p class="foot step">Los 33 son mejores.<br>Desconectando en 3... 2... 1... <span class="cursor"></span></p>
+  </div>
+</main>
+<button class="skip" id="skip" type="button" hidden>[ SALTAR ]</button>
+
+<script>
+(function () {
+  var respuestas = [
+    'Error: excusa no aceptada.',
+    'Intentá de nuevo. Pero diciendo que sí.',
+    'Sistema bloqueado hasta que confirmes.',
+    'Ok, ok. Escribile a Kevin, pero se va a notar.'
+  ];
+  var n = 0;
+  document.getElementById('nopuedo').addEventListener('click', function () {
+    document.getElementById('reply').textContent = respuestas[Math.min(n++, respuestas.length - 1)];
+  });
+
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var msg = document.getElementById('msg');
+  var paras = Array.prototype.slice.call(msg.children);
+  var texts = paras.map(function (p) { return p.innerHTML; });
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.step'));
+  var skip = document.getElementById('skip');
+  var timers = [], done = false;
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+
+  paras.forEach(function (p) { p.innerHTML = ''; p.hidden = true; });
+  steps.forEach(function (el) { el.classList.add('wait'); });
+  skip.hidden = false;
+
+  function finish() {
+    if (done) return; done = true;
+    timers.forEach(clearTimeout);
+    paras.forEach(function (p, i) { p.hidden = false; p.innerHTML = texts[i]; });
+    steps.forEach(function (el) { if (el.classList.contains('wait')) { el.classList.remove('wait'); el.classList.add('in'); } });
+    skip.hidden = true;
+  }
+
+  // Tipea el texto plano y al final restaura el HTML (negritas)
+  function typePara(i) {
+    if (done) return;
+    if (i >= paras.length) return reveal(0);
+    var p = paras[i]; p.hidden = false;
+    var tmp = document.createElement('div'); tmp.innerHTML = texts[i];
+    var plain = tmp.textContent, k = 0;
+    var span = document.createElement('span'), cur = document.createElement('span');
+    cur.className = 'cursor'; p.appendChild(span); p.appendChild(cur);
+    (function tick() {
+      if (done) return;
+      span.textContent = plain.slice(0, ++k);
+      if (k < plain.length) return later(tick, i === 0 ? 55 : 24);
+      p.innerHTML = texts[i];
+      later(function () { typePara(i + 1); }, 380);
+    })();
+  }
+
+  function reveal(j) {
+    if (done) return;
+    if (j >= steps.length) { done = true; skip.hidden = true; return; }
+    steps[j].classList.remove('wait'); steps[j].classList.add('in');
+    later(function () { reveal(j + 1); }, 450);
+  }
+
+  skip.addEventListener('click', finish);
+  document.addEventListener('keydown', finish);
+  document.querySelector('.win').addEventListener('click', function (e) {
+    if (!done && !e.target.closest('.key')) finish();
+  });
+
+  later(function () { typePara(0); }, 1400); // primero aparece la cara
+})();
+</script>
+
+</body>
+</html>
